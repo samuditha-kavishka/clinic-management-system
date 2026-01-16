@@ -10,18 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     @GetMapping("/")
-    public String homePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        if (userDetails != null) {
-            model.addAttribute("username", userDetails.getUsername());
-        }
+    public String home() {
         return "home";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        String role = userDetails.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("role", role);
-        model.addAttribute("username", userDetails.getUsername());
-        return "dashboard";
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }
