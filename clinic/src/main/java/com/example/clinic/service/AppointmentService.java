@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AppointmentService {
 
@@ -25,7 +23,6 @@ public class AppointmentService {
     @Autowired
     private EmailService emailService;
 
-    // FIXED: Changed parameter from User to String (username)
     public Page<Appointment> getAppointmentsForUser(String username, int page, int size, String status) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
@@ -33,8 +30,12 @@ public class AppointmentService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateTime").descending());
 
         if (status != null && !status.isEmpty()) {
-            Appointment.Status statusEnum = Appointment.Status.valueOf(status.toUpperCase());
-            return appointmentRepository.findByUserAndStatus(username, statusEnum, pageable);
+            try {
+                Appointment.Status statusEnum = Appointment.Status.valueOf(status.toUpperCase());
+                return appointmentRepository.findByUserAndStatus(username, statusEnum, pageable);
+            } catch (IllegalArgumentException e) {
+                return appointmentRepository.findByUser(username, pageable);
+            }
         }
 
         return appointmentRepository.findByUser(username, pageable);
@@ -54,7 +55,6 @@ public class AppointmentService {
         appointment.setStatus(Appointment.Status.CONFIRMED);
         appointmentRepository.save(appointment);
 
-        // Send confirmation email
         if (appointment.getPatient() != null && appointment.getPatient().getEmail() != null) {
             emailService.sendAppointmentUpdate(
                     appointment.getPatient().getEmail(),
@@ -70,7 +70,6 @@ public class AppointmentService {
         appointment.setStatus(Appointment.Status.CANCELLED);
         appointmentRepository.save(appointment);
 
-        // Send cancellation email
         if (appointment.getPatient() != null && appointment.getPatient().getEmail() != null) {
             emailService.sendAppointmentUpdate(
                     appointment.getPatient().getEmail(),
@@ -83,16 +82,5 @@ public class AppointmentService {
 
     public void deleteAppointment(Long id) {
         appointmentRepository.deleteById(id);
-    }
-
-    // Additional helper methods
-    public Page<Appointment> getAllAppointments(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("dateTime").descending());
-        return appointmentRepository.findAll(pageable);
-    }
-
-    public Page<Appointment> getAppointmentsByStatus(Appointment.Status status, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("dateTime").descending());
-        return appointmentRepository.findByStatus(status, pageable);
     }
 }

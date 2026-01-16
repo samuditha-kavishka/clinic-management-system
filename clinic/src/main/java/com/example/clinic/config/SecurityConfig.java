@@ -24,14 +24,14 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.disable()); // production එකේ enable කරන්න
+                .csrf(csrf -> csrf.disable()); // Enable in production
 
         return http.build();
     }

@@ -37,7 +37,7 @@ public class FileUploadService {
         Path filePath = uploadPath.resolve(uniqueFilename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return "/" + uploadDir + "/" + uniqueFilename;
+        return "/uploads/" + uniqueFilename;
     }
 
     public byte[] getFile(String filename) throws IOException {

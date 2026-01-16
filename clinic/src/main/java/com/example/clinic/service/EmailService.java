@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,17 +16,14 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
-    private TemplateEngine templateEngine;
-
     public void sendWelcomeEmail(String toEmail, String fullName) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            Context context = new Context();
-            context.setVariable("fullName", fullName);
-            String htmlContent = templateEngine.process("email/welcome", context);
+            String htmlContent = "<h1>Welcome to Clinic Management System</h1>" +
+                    "<p>Dear " + fullName + ",</p>" +
+                    "<p>Your account has been created successfully!</p>";
 
             helper.setTo(toEmail);
             helper.setSubject("Welcome to Clinic Management System");
@@ -46,13 +41,10 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            Context context = new Context();
-            context.setVariable("patientName", patientName);
-            context.setVariable("doctorName", doctorName);
-            context.setVariable("appointmentTime",
-                    dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-
-            String htmlContent = templateEngine.process("email/appointment-confirmation", context);
+            String htmlContent = "<h1>Appointment Confirmation</h1>" +
+                    "<p>Dear " + patientName + ",</p>" +
+                    "<p>Your appointment with Dr. " + doctorName + " has been scheduled.</p>" +
+                    "<p>Date & Time: " + dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "</p>";
 
             helper.setTo(toEmail);
             helper.setSubject("Appointment Confirmation - Clinic Management System");
@@ -70,13 +62,11 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            Context context = new Context();
-            context.setVariable("patientName", patientName);
-            context.setVariable("status", status);
-            context.setVariable("appointmentTime",
-                    dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-
-            String htmlContent = templateEngine.process("email/appointment-update", context);
+            String htmlContent = "<h1>Appointment " + status + "</h1>" +
+                    "<p>Dear " + patientName + ",</p>" +
+                    "<p>Your appointment scheduled on " +
+                    dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
+                    " has been " + status.toLowerCase() + ".</p>";
 
             helper.setTo(toEmail);
             helper.setSubject("Appointment " + status + " - Clinic Management System");

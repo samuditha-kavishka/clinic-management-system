@@ -18,24 +18,30 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public boolean existsByUsername(String username) {
-        return userRepository.findByUsername(username).isPresent();
+        return userRepository.existsByUsername(username);
     }
 
     @Transactional
     public User registerUser(UserRegistrationDto userDto) {
         User user;
 
-        switch (userDto.getRole()) {
-            case "PATIENT":
-                user = new com.example.clinic.entity.Patient();
-                break;
-            case "DOCTOR":
-                user = new com.example.clinic.entity.Doctor();
-                break;
-            default:
-                user = new User() {};
-                user.setRole("ROLE_USER");
-                break;
+        if ("DOCTOR".equals(userDto.getRole())) {
+            com.example.clinic.entity.Doctor doctor = new com.example.clinic.entity.Doctor();
+            user = doctor;
+        } else if ("ADMIN".equals(userDto.getRole())) {
+            // Create a simple User for admin
+            user = new User() {
+                @Override
+                public String getUsername() {
+                    return super.getUsername();
+                }
+            };
+            user.setRole("ROLE_ADMIN");
+        } else {
+            // Default to Patient
+            com.example.clinic.entity.Patient patient = new com.example.clinic.entity.Patient();
+            user = patient;
+            user.setRole("ROLE_PATIENT");
         }
 
         user.setUsername(userDto.getUsername());

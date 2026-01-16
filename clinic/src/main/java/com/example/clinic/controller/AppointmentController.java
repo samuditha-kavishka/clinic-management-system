@@ -116,17 +116,4 @@ public class AppointmentController {
         appointmentService.deleteAppointment(id);
         return "redirect:/appointments?success=Appointment deleted";
     }
-
-    // Admin view - all appointments
-    @GetMapping("/admin")
-    public String viewAllAppointments(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            Model model) {
-        Page<Appointment> appointmentPage = appointmentService.getAllAppointments(page, size);
-        model.addAttribute("appointments", appointmentPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", appointmentPage.getTotalPages());
-        return "appointment/admin-list";
-    }
 }
