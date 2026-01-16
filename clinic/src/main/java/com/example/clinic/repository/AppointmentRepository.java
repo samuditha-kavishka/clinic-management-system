@@ -1,28 +1,33 @@
 package com.example.clinic.repository;
 
 import com.example.clinic.entity.Appointment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    List<Appointment> findByPatientId(Long patientId);
+    // FIXED: Added this method
+    @Query("SELECT a FROM Appointment a WHERE a.patient.username = :username OR a.doctor.username = :username")
+    Page<Appointment> findByUser(@Param("username") String username, Pageable pageable);
 
-    List<Appointment> findByDoctorId(Long doctorId);
+    // FIXED: Added this method
+    @Query("SELECT a FROM Appointment a WHERE (a.patient.username = :username OR a.doctor.username = :username) AND a.status = :status")
+    Page<Appointment> findByUserAndStatus(@Param("username") String username,
+                                          @Param("status") Appointment.Status status,
+                                          Pageable pageable);
 
-    List<Appointment> findByDoctorIdAndAppointmentDate(Long doctorId, LocalDate date);
+    Page<Appointment> findByPatientUsername(String username, Pageable pageable);
 
-    Optional<Appointment> findByDoctorIdAndAppointmentTime(Long doctorId, LocalDateTime time);
+    Page<Appointment> findByDoctorUsername(String username, Pageable pageable);
 
-    List<Appointment> findByStatus(String status);  // e.g. "PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"
+    Page<Appointment> findByStatus(Appointment.Status status, Pageable pageable);
 
-    List<Appointment> findByAppointmentDateBetween(LocalDate startDate, LocalDate endDate);
+    // Optional: Find appointments by patient
+    Page<Appointment> findByPatientId(Long patientId, Pageable pageable);
 
-    // Upcoming appointments example
-    List<Appointment> findByAppointmentTimeAfterAndStatusOrderByAppointmentTimeAsc(
-            LocalDateTime now, String status);
+    // Optional: Find appointments by doctor
+    Page<Appointment> findByDoctorId(Long doctorId, Pageable pageable);
 }
