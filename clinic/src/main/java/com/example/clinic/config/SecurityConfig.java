@@ -12,16 +12,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // Password encoder bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Security filter chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Public URLs
+                        // Public URLs (accessible without login)
                         .requestMatchers(
                                 "/",
                                 "/login",
@@ -30,13 +32,9 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/webjars/**",
-                                "/favicon.ico"
+                                "/favicon.ico",
+                                "/error"
                         ).permitAll()
-
-                        // Role-based access (අවශ්‍ය නම්)
-                        // .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // .requestMatchers("/doctor/**").hasRole("DOCTOR")
-                        // .requestMatchers("/patient/**").hasRole("PATIENT")
 
                         // All other requests need authentication
                         .anyRequest().authenticated()
@@ -44,12 +42,10 @@ public class SecurityConfig {
 
                 // Login configuration
                 .formLogin(form -> form
-                        .loginPage("/login")                // Custom login page URL
-                        .loginProcessingUrl("/login")       // Spring Security login processing URL
-                        .usernameParameter("username")      // Form username parameter name
-                        .passwordParameter("password")      // Form password parameter name
-                        .defaultSuccessUrl("/dashboard", true)  // Login success redirect
-                        .failureUrl("/login?error=true")    // Login failure redirect
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/dashboard", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
 
@@ -57,25 +53,13 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")               // Logout URL
                         .logoutSuccessUrl("/login?logout=true")  // After logout redirect
-                        .invalidateHttpSession(true)        // Session clear
-                        .deleteCookies("JSESSIONID")        // Cookies delete
+                        .invalidateHttpSession(true)        // Clear session
+                        .deleteCookies("JSESSIONID")        // Delete cookies
                         .permitAll()
                 )
 
-                // Remember Me
-                .rememberMe(remember -> remember
-                        .rememberMeParameter("remember-me")  // Remember me parameter name
-                        .tokenValiditySeconds(86400)         // 24 hours
-                        .key("clinicAppKey")                 // Unique key
-                )
-
-                // Exception handling
-                .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/access-denied")  // Access denied page
-                )
-
-                // CSRF (Development එකේ disable කරන්න)
-                .csrf(csrf -> csrf.disable());          // Production එකේ enable කරන්න
+                // CSRF Configuration (disabled for development)
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

@@ -3,52 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle}">Dashboard</title>
+    <title>Dashboard - Clinic Management</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
         .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #343a40;
             color: white;
+            min-height: 100vh;
         }
 
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
             padding: 15px 20px;
-            border-left: 4px solid transparent;
         }
 
-        .sidebar .nav-link:hover,
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
         .sidebar .nav-link.active {
             color: white;
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid white;
-        }
-
-        .sidebar .nav-link i {
-            width: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         .main-content {
             padding: 30px;
-            background-color: #f8f9fa;
-        }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
         }
 
         .welcome-card {
@@ -98,11 +85,6 @@
                         <i class="fas fa-file-invoice-dollar"></i> Billing
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-cog"></i> Settings
-                    </a>
-                </li>
                 <li class="nav-item mt-5">
                     <a class="nav-link text-danger" th:href="@{/logout}">
                         <i class="fas fa-sign-out-alt"></i> Logout
@@ -113,92 +95,45 @@
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 main-content">
-            <!-- Top Bar -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 th:text="${welcomeMessage}">Welcome to Clinic Management System</h1>
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button"
-                            data-bs-toggle="dropdown">
-                        <i class="fas fa-user-circle me-2"></i>
-                        <span th:text="${#authentication.name}">User</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" th:href="@{/logout}">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                        </a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Welcome Card -->
+            <!-- Welcome Message -->
             <div class="card welcome-card mb-4">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h4>Good morning, <span th:text="${#authentication.name}">User</span>!</h4>
-                            <p class="mb-0">Welcome back to Clinic Management System. You have 5 appointments today.</p>
-                        </div>
-                        <div class="col-md-3 text-end">
-                            <i class="fas fa-hospital fa-4x opacity-75"></i>
-                        </div>
-                    </div>
+                    <h3>Welcome, <span th:text="${#authentication.name}">User</span>!</h3>
+                    <p class="mb-0">You have successfully logged into Clinic Management System.</p>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
+            <!-- Quick Stats -->
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="card text-white bg-primary">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Total Patients</h6>
-                                    <h3 class="mb-0">124</h3>
-                                </div>
-                                <i class="fas fa-users fa-3x opacity-50"></i>
-                            </div>
+                            <h6 class="card-title">Total Patients</h6>
+                            <h3 class="mb-0">0</h3>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card text-white bg-success">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Today's Appointments</h6>
-                                    <h3 class="mb-0">8</h3>
-                                </div>
-                                <i class="fas fa-calendar-check fa-3x opacity-50"></i>
-                            </div>
+                            <h6 class="card-title">Today's Appointments</h6>
+                            <h3 class="mb-0">0</h3>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card text-white bg-warning">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Pending Bills</h6>
-                                    <h3 class="mb-0">3</h3>
-                                </div>
-                                <i class="fas fa-file-invoice-dollar fa-3x opacity-50"></i>
-                            </div>
+                            <h6 class="card-title">Pending Bills</h6>
+                            <h3 class="mb-0">0</h3>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card text-white bg-info">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Available Doctors</h6>
-                                    <h3 class="mb-0">12</h3>
-                                </div>
-                                <i class="fas fa-user-md fa-3x opacity-50"></i>
-                            </div>
+                            <h6 class="card-title">Available Doctors</h6>
+                            <h3 class="mb-0">0</h3>
                         </div>
                     </div>
                 </div>
@@ -206,34 +141,34 @@
 
             <!-- Quick Actions -->
             <div class="card">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 text-center mb-3">
-                            <a href="#" class="btn btn-outline-primary btn-lg p-4 rounded-circle">
-                                <i class="fas fa-user-plus fa-2x"></i>
+                            <a href="#" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-user-plus"></i><br>
+                                Add Patient
                             </a>
-                            <p class="mt-2 mb-0">Add Patient</p>
                         </div>
                         <div class="col-md-3 text-center mb-3">
-                            <a href="#" class="btn btn-outline-success btn-lg p-4 rounded-circle">
-                                <i class="fas fa-calendar-plus fa-2x"></i>
+                            <a href="#" class="btn btn-outline-success btn-lg">
+                                <i class="fas fa-calendar-plus"></i><br>
+                                New Appointment
                             </a>
-                            <p class="mt-2 mb-0">New Appointment</p>
                         </div>
                         <div class="col-md-3 text-center mb-3">
-                            <a href="#" class="btn btn-outline-warning btn-lg p-4 rounded-circle">
-                                <i class="fas fa-pills fa-2x"></i>
+                            <a href="#" class="btn btn-outline-warning btn-lg">
+                                <i class="fas fa-pills"></i><br>
+                                Add Medicine
                             </a>
-                            <p class="mt-2 mb-0">Add Medicine</p>
                         </div>
                         <div class="col-md-3 text-center mb-3">
-                            <a href="#" class="btn btn-outline-info btn-lg p-4 rounded-circle">
-                                <i class="fas fa-file-invoice fa-2x"></i>
+                            <a href="#" class="btn btn-outline-info btn-lg">
+                                <i class="fas fa-file-invoice"></i><br>
+                                Generate Bill
                             </a>
-                            <p class="mt-2 mb-0">Generate Bill</p>
                         </div>
                     </div>
                 </div>
@@ -244,18 +179,7 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    // Simple scripts
-    document.addEventListener('DOMContentLoaded', function() {
-        // Highlight active link
-        const currentPage = window.location.pathname;
-        document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
-                link.classList.add('active');
-            }
-        });
-    });
-</script>
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
