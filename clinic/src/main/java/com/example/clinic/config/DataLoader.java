@@ -18,22 +18,24 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check and create admin user
+        System.out.println("=== Checking and creating users ===");
+
+        // Create admin user if not exists
         if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123")); // ENCRYPTED!
+            admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setEmail("admin@clinic.com");
             admin.setFullName("Administrator");
             admin.setRole(User.Role.ADMIN);
             admin.setEnabled(true);
             userRepository.save(admin);
-            System.out.println("✓ Admin user created: username=admin, password=admin123");
+            System.out.println("✓ Admin user created: admin/admin123");
         } else {
             System.out.println("✓ Admin user already exists");
         }
 
-        // Check and create doctor user
+        // Create doctor user if not exists
         if (userRepository.findByUsername("doctor").isEmpty()) {
             User doctor = new User();
             doctor.setUsername("doctor");
@@ -43,10 +45,12 @@ public class DataLoader implements CommandLineRunner {
             doctor.setRole(User.Role.DOCTOR);
             doctor.setEnabled(true);
             userRepository.save(doctor);
-            System.out.println("✓ Doctor user created: username=doctor, password=doctor123");
+            System.out.println("✓ Doctor user created: doctor/doctor123");
+        } else {
+            System.out.println("✓ Doctor user already exists");
         }
 
-        // Check and create patient user
+        // Create patient user if not exists
         if (userRepository.findByUsername("patient").isEmpty()) {
             User patient = new User();
             patient.setUsername("patient");
@@ -56,9 +60,12 @@ public class DataLoader implements CommandLineRunner {
             patient.setRole(User.Role.PATIENT);
             patient.setEnabled(true);
             userRepository.save(patient);
-            System.out.println("✓ Patient user created: username=patient, password=patient123");
+            System.out.println("✓ Patient user created: patient/patient123");
+        } else {
+            System.out.println("✓ Patient user already exists");
         }
 
+        System.out.println("=== User creation complete ===");
         System.out.println("Total users in database: " + userRepository.count());
     }
 }

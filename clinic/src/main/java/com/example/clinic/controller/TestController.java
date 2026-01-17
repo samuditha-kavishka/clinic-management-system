@@ -17,44 +17,41 @@ public class TestController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/test/users")
-    public String testUsers() {
+    @GetMapping("/test/db")
+    public String testDatabase() {
         StringBuilder result = new StringBuilder();
-        result.append("<h1>Users in Database</h1>");
+        result.append("<h1>Database Test</h1>");
 
+        // Count users
+        long count = userRepository.count();
+        result.append("<p>Total users in database: ").append(count).append("</p>");
+
+        // List all users
         List<User> users = userRepository.findAll();
-        result.append("<p>Total users: ").append(users.size()).append("</p>");
-
         for (User user : users) {
             result.append("<hr>");
             result.append("<p><strong>Username:</strong> ").append(user.getUsername()).append("</p>");
-            result.append("<p><strong>Password (hashed):</strong> ").append(user.getPassword()).append("</p>");
             result.append("<p><strong>Email:</strong> ").append(user.getEmail()).append("</p>");
             result.append("<p><strong>Role:</strong> ").append(user.getRole()).append("</p>");
             result.append("<p><strong>Enabled:</strong> ").append(user.isEnabled()).append("</p>");
-
-            // Test password matching
-            String testPassword = "admin123";
-            boolean passwordMatches = passwordEncoder.matches(testPassword, user.getPassword());
-            result.append("<p><strong>Password '").append(testPassword).append("' matches:</strong> ").append(passwordMatches).append("</p>");
         }
 
         return result.toString();
     }
 
-    @GetMapping("/test/create-admin")
-    public String createAdmin() {
-        if (userRepository.findByUsername("admin").isEmpty()) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setEmail("admin@clinic.com");
-            admin.setFullName("Administrator");
-            admin.setRole(User.Role.ADMIN);
-            admin.setEnabled(true);
-            userRepository.save(admin);
-            return "Admin user created!";
+    @GetMapping("/test/create-test-user")
+    public String createTestUser() {
+        if (userRepository.findByUsername("test").isEmpty()) {
+            User testUser = new User();
+            testUser.setUsername("test");
+            testUser.setPassword(passwordEncoder.encode("test123"));
+            testUser.setEmail("test@clinic.com");
+            testUser.setFullName("Test User");
+            testUser.setRole(User.Role.PATIENT);
+            testUser.setEnabled(true);
+            userRepository.save(testUser);
+            return "Test user created: test/test123";
         }
-        return "Admin user already exists!";
+        return "Test user already exists";
     }
 }
