@@ -27,11 +27,10 @@ public class PatientService {
     public Patient updatePatient(Long id, Patient patientDetails) {
         Patient patient = patientRepository.findById(id).orElseThrow();
         patient.setDateOfBirth(patientDetails.getDateOfBirth());
-        patient.setAge(patientDetails.getAge());
         patient.setGender(patientDetails.getGender());
         patient.setBloodGroup(patientDetails.getBloodGroup());
         patient.setAddress(patientDetails.getAddress());
-        patient.setPhone(patientDetails.getPhone());
+        patient.setPhoneNumber(patientDetails.getPhoneNumber());
         patient.setEmergencyContact(patientDetails.getEmergencyContact());
         return patientRepository.save(patient);
     }

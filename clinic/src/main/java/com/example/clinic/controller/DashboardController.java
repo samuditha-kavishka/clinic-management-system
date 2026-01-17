@@ -26,9 +26,9 @@ public class DashboardController {
         model.addAttribute("pageTitle", "Dashboard");
 
         // Get today's appointments count
-        long todayAppointments = appointmentService
-                .getAppointmentsByDoctor(1L, LocalDate.now()) // Example doctor ID
-                .size();
+        long todayAppointments = appointmentService.getAllAppointments().stream()
+                .filter(app -> app.getAppointmentDate().equals(LocalDate.now()))
+                .count();
 
         // Get total counts
         long totalDoctors = doctorService.getAllDoctors().size();
@@ -43,6 +43,6 @@ public class DashboardController {
 
     @GetMapping("/")
     public String homeRedirect() {
-        return "redirect:/dashboard";
+        return "redirect:/login";
     }
 }

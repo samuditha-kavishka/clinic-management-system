@@ -36,4 +36,8 @@ public class AppointmentService {
         appointment.setStatus(Appointment.Status.CANCELLED);
         appointmentRepository.save(appointment);
     }
+
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
 }

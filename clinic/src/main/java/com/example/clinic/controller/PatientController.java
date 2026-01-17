@@ -37,7 +37,27 @@ public class PatientController {
 
     @PostMapping("/create")
     public String createPatient(@ModelAttribute Patient patient) {
+        patient.setRole(Patient.Role.PATIENT);
         patientService.createPatient(patient);
+        return "redirect:/patients";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Patient patient = patientService.getPatientById(id);
+        model.addAttribute("patient", patient);
+        return "patients/edit";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updatePatient(@PathVariable Long id, @ModelAttribute Patient patient) {
+        patientService.updatePatient(id, patient);
+        return "redirect:/patients";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deletePatient(@PathVariable Long id) {
+        patientService.deletePatient(id);
         return "redirect:/patients";
     }
 }

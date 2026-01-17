@@ -2,26 +2,22 @@ package com.example.clinic.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "patients")
+@Table(name = "doctors")
 @PrimaryKeyJoinColumn(name = "user_id")
-public class Patient extends User {
+public class Doctor extends User {
 
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    private String specialization;
+    private String qualification;
 
-    private Integer age;
-    private String gender;
+    @Column(name = "license_number", unique = true)
+    private String licenseNumber;
 
-    @Column(name = "blood_group")
-    private String bloodGroup;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-    private String address;
-    private String phone;
-
-    @Column(name = "emergency_contact")
-    private String emergencyContact;
+    @Column(name = "room_number")
+    private String roomNumber;
 }

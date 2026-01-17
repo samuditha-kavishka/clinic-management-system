@@ -29,6 +29,8 @@ public class DoctorService {
         doctor.setSpecialization(doctorDetails.getSpecialization());
         doctor.setQualification(doctorDetails.getQualification());
         doctor.setLicenseNumber(doctorDetails.getLicenseNumber());
+        doctor.setPhoneNumber(doctorDetails.getPhoneNumber());
+        doctor.setRoomNumber(doctorDetails.getRoomNumber());
         return doctorRepository.save(doctor);
     }
 
