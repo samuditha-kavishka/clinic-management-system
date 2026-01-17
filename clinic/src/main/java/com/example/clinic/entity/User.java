@@ -1,17 +1,14 @@
 package com.example.clinic.entity;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.util.Collection;
-import java.util.List;
-
+@Data
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,44 +20,34 @@ public abstract class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role; // ROLE_PATIENT, ROLE_DOCTOR, ROLE_ADMIN
-
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
-    @Override
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @Override
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
-    @Override
-    public boolean isAccountNonExpired() { return true; }
-    @Override
-    public boolean isAccountNonLocked() { return true; }
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
-    @Override
-    public boolean isEnabled() { return true; }
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public enum Role {
+        ADMIN, DOCTOR, PATIENT, STAFF
+    }
 }

@@ -1,8 +1,12 @@
 package com.example.clinic.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -12,40 +16,34 @@ public class Appointment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    private LocalDateTime dateTime;
+    @Column(name = "appointment_date", nullable = false)
+    private LocalDate appointmentDate;
+
+    @Column(name = "appointment_time", nullable = false)
+    private LocalTime appointmentTime;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.PENDING;
+    private Status status = Status.SCHEDULED;
 
+    private String reason;
     private String notes;
 
-    public enum Status {
-        PENDING, CONFIRMED, CANCELLED, COMPLETED
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Patient getPatient() { return patient; }
-    public void setPatient(Patient patient) { this.patient = patient; }
-
-    public Doctor getDoctor() { return doctor; }
-    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
-
-    public LocalDateTime getDateTime() { return dateTime; }
-    public void setDateTime(LocalDateTime dateTime) { this.dateTime = dateTime; }
-
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
-
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public enum Status {
+        SCHEDULED, CONFIRMED, COMPLETED, CANCELLED
+    }
 }

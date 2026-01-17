@@ -1,36 +1,27 @@
 package com.example.clinic.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Data;
+import java.time.LocalDate;
 
+@Data
 @Entity
-@Table(name = "doctors")
+@Table(name = "patients")
 @PrimaryKeyJoinColumn(name = "user_id")
-public class Doctor extends User {
+public class Patient extends User {
 
-    private String specialization;
-    private String qualification;
-    private LocalTime availableFrom;
-    private LocalTime availableTo;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    private List<Appointment> appointments = new ArrayList<>();
+    private Integer age;
+    private String gender;
 
-    // Getters and Setters
-    public String getSpecialization() { return specialization; }
-    public void setSpecialization(String specialization) { this.specialization = specialization; }
+    @Column(name = "blood_group")
+    private String bloodGroup;
 
-    public String getQualification() { return qualification; }
-    public void setQualification(String qualification) { this.qualification = qualification; }
+    private String address;
+    private String phone;
 
-    public LocalTime getAvailableFrom() { return availableFrom; }
-    public void setAvailableFrom(LocalTime availableFrom) { this.availableFrom = availableFrom; }
-
-    public LocalTime getAvailableTo() { return availableTo; }
-    public void setAvailableTo(LocalTime availableTo) { this.availableTo = availableTo; }
-
-    public List<Appointment> getAppointments() { return appointments; }
-    public void setAppointments(List<Appointment> appointments) { this.appointments = appointments; }
+    @Column(name = "emergency_contact")
+    private String emergencyContact;
 }
