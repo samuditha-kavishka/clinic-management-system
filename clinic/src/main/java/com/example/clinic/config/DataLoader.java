@@ -18,54 +18,35 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("=== Checking and creating users ===");
+        createUserIfNotExists("admin", "admin123", "admin@clinic.com",
+                "System Administrator", User.Role.ADMIN);
 
-        // Create admin user if not exists
-        if (userRepository.findByUsername("admin").isEmpty()) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setEmail("admin@clinic.com");
-            admin.setFullName("Administrator");
-            admin.setRole(User.Role.ADMIN);
-            admin.setEnabled(true);
-            userRepository.save(admin);
-            System.out.println("✓ Admin user created: admin/admin123");
-        } else {
-            System.out.println("✓ Admin user already exists");
+        createUserIfNotExists("doctor", "doctor123", "doctor@clinic.com",
+                "Dr. John Smith", User.Role.DOCTOR);
+
+        createUserIfNotExists("patient", "patient123", "patient@clinic.com",
+                "Jane Doe", User.Role.PATIENT);
+
+        createUserIfNotExists("staff", "staff123", "staff@clinic.com",
+                "Robert Johnson", User.Role.STAFF);
+    }
+
+    private void createUserIfNotExists(String username, String password,
+                                       String email, String fullName, User.Role role) {
+        if (userRepository.findByUsername(username).isEmpty()) {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setEmail(email);
+            user.setFullName(fullName);
+            user.setRole(role);
+            user.setEnabled(true);
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setCredentialsNonExpired(true);
+
+            userRepository.save(user);
+            System.out.println("✓ User created: " + username + " (" + role + ")");
         }
-
-        // Create doctor user if not exists
-        if (userRepository.findByUsername("doctor").isEmpty()) {
-            User doctor = new User();
-            doctor.setUsername("doctor");
-            doctor.setPassword(passwordEncoder.encode("doctor123"));
-            doctor.setEmail("doctor@clinic.com");
-            doctor.setFullName("Dr. John Smith");
-            doctor.setRole(User.Role.DOCTOR);
-            doctor.setEnabled(true);
-            userRepository.save(doctor);
-            System.out.println("✓ Doctor user created: doctor/doctor123");
-        } else {
-            System.out.println("✓ Doctor user already exists");
-        }
-
-        // Create patient user if not exists
-        if (userRepository.findByUsername("patient").isEmpty()) {
-            User patient = new User();
-            patient.setUsername("patient");
-            patient.setPassword(passwordEncoder.encode("patient123"));
-            patient.setEmail("patient@clinic.com");
-            patient.setFullName("John Doe");
-            patient.setRole(User.Role.PATIENT);
-            patient.setEnabled(true);
-            userRepository.save(patient);
-            System.out.println("✓ Patient user created: patient/patient123");
-        } else {
-            System.out.println("✓ Patient user already exists");
-        }
-
-        System.out.println("=== User creation complete ===");
-        System.out.println("Total users in database: " + userRepository.count());
     }
 }

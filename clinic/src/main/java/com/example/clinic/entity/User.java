@@ -54,6 +54,18 @@ public class User implements UserDetails {
     @Column(name = "is_credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired = true;
 
+    // ========== MANUALLY ADDED SETTERS (Lombok නැත්තම්) ==========
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email) { this.email = email; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setRole(Role role) { this.role = role; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public void setAccountNonExpired(boolean accountNonExpired) { this.accountNonExpired = accountNonExpired; }
+    public void setAccountNonLocked(boolean accountNonLocked) { this.accountNonLocked = accountNonLocked; }
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) { this.credentialsNonExpired = credentialsNonExpired; }
+    // ============================================================
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -65,21 +77,19 @@ public class User implements UserDetails {
         updatedAt = LocalDateTime.now();
     }
 
-    // CRITICAL: UserDetails interface methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
-    // Getters for UserDetails interface
     @Override
     public String getPassword() {
-        return this.password; // Make sure this returns the password field
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.username; // Make sure this returns the username field
+        return this.username;
     }
 
     @Override
